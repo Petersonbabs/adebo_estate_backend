@@ -2,33 +2,59 @@ const dotEnv = require("dotenv")
 dotEnv.config()
 
 const handleDupError = (err)=>{
-    const dupKey = Object.keys(err.keyValue)[0]
-    const dupValue = Object.values(err.keyValue)[0]
-    const message = `${dupKey} of ${dupValue} already exists!`
-    const error = new Error(message)
+  const dupKey = Object.keys(err.keyValue)[0];
+  const dupValue = Object.value(err.keyValue)[0];
+  const message = `${dupKey} of ${dupValue} already exists`;
+  const error = new Error(message);
+  error.statusCode = 400
+  return error
+}
+
+const handleCastError = (err)=>{
+    const message = `Invalid ${err.path}: ${err.value}`
+    const error = new Error(message);
     error.statusCode = 400
     return error
 }
 
-const handleCastError = (err)=>{
-    
+const handleValidationError = (err)=>{
+    let message
+    const errValue = Object.values(err.errors).map(error => error.value);
+    const errKey = Object.values(err.errors).map(error => error.path)
+    const errKind = Object.values(err.errors).map(error => error.kind)
+    if (errKind == 'required') {
+        message = `Please provide a ${errKey}`
+    } else {
+        message = `${errValue} is an invalid ${errKey}`
+    }
+    const error = new Error(message);
+    error.statusCode = 400;
+    return error
 }
 
-const handleValidationError = (err)=>{
-
+const handleNetworkError = (err)=>{
+    const message = 'Mongo network error'
+    const error = new Error(message)
+    return error
 }
 
 const ProdError = (err, res)=>{
+
+    if(err.code == "ETIMEOUT"){
+        const error = handleNetworkError(err)
+        res.status(400).json({
+            message: error.message
+        })
+    }
     
     // DUPLICATE
     if(err.code == 11000){
         const error = handleDupError(err)
         res.status(error.statusCode).json({
-            status: error.status,
             message: error.message
         })
     }
-
+   
     // CAST ERROR
     if(err.name == 'castError'){
         const error = handleCastError(err)

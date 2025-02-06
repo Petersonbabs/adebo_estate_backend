@@ -6,6 +6,7 @@ const bcrypt = require("bcryptjs")
 
 // SIGN UP
 const signup = async (req, res, next) => {
+    console.log(req.body)
     const { password  } = req.body
     try {
         const salt = await bcrypt.genSalt(12)

@@ -3,7 +3,7 @@ dotEnv.config()
 
 const handleDupError = (err)=>{
   const dupKey = Object.keys(err.keyValue)[0];
-  const dupValue = Object.value(err.keyValue)[0];
+  const dupValue = Object.values(err.keyValue)[0];
   const message = `${dupKey} of ${dupValue} already exists`;
   const error = new Error(message);
   error.statusCode = 400

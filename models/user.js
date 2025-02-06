@@ -2,7 +2,12 @@ const mongoose = require("mongoose");
 
 const UserSchema = new mongoose.Schema(
   {
-    fullName: {
+    firstName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    lastName: {
       type: String,
       required: true,
       trim: true,
@@ -23,7 +28,7 @@ const UserSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["buyer", "agent", "admin"],
+      enum: ["agent", "landlord", "developer", 'buyer'],
       default: "buyer",
     },
     verificationToken: {

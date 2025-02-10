@@ -11,8 +11,10 @@ app.use(morgan("dev"))
 
 // ROUTES
 const AuthRoutes = require("./routes/auth")
+const propertyRoutes = require("./routes/property")
 
 app.use('/api/v1/auth', AuthRoutes)
+app.use('/api/v1/property', propertyRoutes)
 
 app.all("*", (req, res)=>{
     res.json({

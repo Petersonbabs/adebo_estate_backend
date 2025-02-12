@@ -20,7 +20,7 @@ const handleCastError = (err)=>{
 const handleValidationError = (err)=>{
     let message
     const errValue = Object.values(err.errors).map(error => error.value);
-    const errKey = Object.values(err.errors).map(error => error.path)
+    const errKey = Object.keys(err.errors).map(error => error.path)
     const errKind = Object.values(err.errors).map(error => error.kind)
     if (errKind == 'required') {
         message = `Please provide a ${errKey}`
